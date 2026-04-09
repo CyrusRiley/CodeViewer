@@ -1,0 +1,108 @@
+{
+  "name": "local-code-explainer",
+  "displayName": "Local Code Explainer",
+  "description": "Explain selected code using a local LLM service.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:localCodeExplainer.explainSelection"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "localCodeExplainer.explainSelection",
+        "title": "Local Code Explainer: Explain Selected Code",
+        "category": "Local Code Explainer"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "localCodeExplainer.explainSelection",
+        "key": "ctrl+alt+e",
+        "mac": "cmd+alt+e",
+        "when": "editorTextFocus && editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "Local Code Explainer",
+      "properties": {
+        "localCodeExplainer.baseUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8000",
+          "description": "Base URL of your local LLM HTTP service."
+        },
+        "localCodeExplainer.apiPath": {
+          "type": "string",
+          "default": "/v1/chat/completions",
+          "description": "API path (OpenAI-compatible endpoint path)."
+        },
+        "localCodeExplainer.model": {
+          "type": "string",
+          "default": "qwen2.5-coder-7b-instruct-q5_k_m.gguf",
+          "description": "Model name sent in the request payload."
+        },
+        "localCodeExplainer.timeoutMs": {
+          "type": "number",
+          "default": 60000,
+          "minimum": 1000,
+          "description": "Request timeout in milliseconds."
+        },
+        "localCodeExplainer.contextBeforeLines": {
+          "type": "number",
+          "default": 20,
+          "minimum": 0,
+          "description": "How many lines before the selection to include as context."
+        },
+        "localCodeExplainer.contextAfterLines": {
+          "type": "number",
+          "default": 20,
+          "minimum": 0,
+          "description": "How many lines after the selection to include as context."
+        },
+        "localCodeExplainer.defaultMode": {
+          "type": "string",
+          "default": "detailed",
+          "enum": [
+            "detailed",
+            "concise"
+          ],
+          "description": "Default explanation mode. MVP mainly targets detailed mode."
+        },
+        "localCodeExplainer.maxSelectionChars": {
+          "type": "number",
+          "default": 12000,
+          "minimum": 100,
+          "description": "Hard limit for selected code characters."
+        },
+        "localCodeExplainer.enableCache": {
+          "type": "boolean",
+          "default": true,
+          "description": "Reuse previous explanation result for repeated identical requests in this session."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/vscode": "^1.88.0",
+    "typescript": "^5.4.5",
+    "@vscode/vsce": "^3.6.2",
+    "eslint": "^9.23.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0"
+  }
+}
