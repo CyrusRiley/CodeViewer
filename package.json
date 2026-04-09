@@ -35,7 +35,7 @@
       "properties": {
         "localCodeExplainer.baseUrl": {
           "type": "string",
-          "default": "http://127.0.0.1:8000",
+          "default": "http://127.0.0.1:8080",
           "description": "Base URL of your local LLM HTTP service."
         },
         "localCodeExplainer.apiPath": {
@@ -68,12 +68,12 @@
         },
         "localCodeExplainer.defaultMode": {
           "type": "string",
-          "default": "detailed",
+          "default": "simple",
           "enum": [
-            "detailed",
-            "concise"
+            "detail",
+            "simple"
           ],
-          "description": "Default explanation mode. MVP mainly targets detailed mode."
+          "description": "Default explanation style used for each request."
         },
         "localCodeExplainer.maxSelectionChars": {
           "type": "number",
@@ -96,13 +96,17 @@
     "lint": "eslint src --ext ts",
     "package": "vsce package"
   },
+  "dependencies": {
+    "markdown-it": "^14.1.0"
+  },
   "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^20.11.30",
     "@types/vscode": "^1.88.0",
-    "typescript": "^5.4.5",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
     "@vscode/vsce": "^3.6.2",
     "eslint": "^9.23.0",
-    "@typescript-eslint/parser": "^8.28.0",
-    "@typescript-eslint/eslint-plugin": "^8.28.0"
+    "typescript": "^5.4.5"
   }
 }

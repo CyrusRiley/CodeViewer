@@ -1,9 +1,17 @@
-import * as vscode from "vscode";
+﻿import * as vscode from "vscode";
+import MarkdownIt from "markdown-it";
+
+const md = new MarkdownIt({
+  html: false,
+  linkify: true,
+  breaks: true,
+  typographer: false
+});
 
 export class ResultPanel {
   private panel: vscode.WebviewPanel | undefined;
 
-  constructor(private readonly extensionUri: vscode.Uri) {}
+  constructor() {}
 
   public show(markdown: string, titleSuffix: string): void {
     const title = `Code Explanation - ${titleSuffix}`;
@@ -30,13 +38,14 @@ export class ResultPanel {
   }
 
   private getHtml(markdown: string): string {
-    const body = renderSimpleMarkdown(markdown);
+    const body = md.render(markdown);
 
     return `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';" />
   <style>
     :root {
       color-scheme: light dark;
@@ -44,35 +53,60 @@ export class ResultPanel {
     body {
       font-family: var(--vscode-font-family);
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.6;
       padding: 20px;
-      max-width: 960px;
+      max-width: 980px;
       margin: 0 auto;
+      word-break: break-word;
+    }
+    h1, h2, h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+      line-height: 1.35;
     }
     h2 {
       border-bottom: 1px solid var(--vscode-editorWidget-border);
       padding-bottom: 6px;
-      margin-top: 22px;
-      margin-bottom: 10px;
     }
-    code {
-      font-family: var(--vscode-editor-font-family);
-      background: var(--vscode-textCodeBlock-background);
-      padding: 1px 4px;
-      border-radius: 4px;
-    }
-    pre {
-      white-space: pre-wrap;
-      background: var(--vscode-textCodeBlock-background);
-      padding: 10px;
-      border-radius: 6px;
-      overflow-x: auto;
+    p {
+      margin: 8px 0;
     }
     ul, ol {
       padding-left: 24px;
     }
-    p {
-      margin: 8px 0;
+    pre {
+      background: var(--vscode-textCodeBlock-background);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    code {
+      font-family: var(--vscode-editor-font-family);
+      background: var(--vscode-textCodeBlock-background);
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+    }
+    blockquote {
+      margin: 10px 0;
+      padding: 0 12px;
+      border-left: 3px solid var(--vscode-textLink-foreground);
+      opacity: 0.9;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 12px 0;
+    }
+    th, td {
+      border: 1px solid var(--vscode-editorWidget-border);
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
     }
   </style>
 </head>
@@ -81,79 +115,4 @@ ${body}
 </body>
 </html>`;
   }
-}
-
-function renderSimpleMarkdown(markdown: string): string {
-  const escaped = escapeHtml(markdown);
-  const lines = escaped.split(/\r?\n/);
-  const html: string[] = [];
-
-  let inList = false;
-  let listType: "ul" | "ol" | null = null;
-
-  const closeList = (): void => {
-    if (inList && listType) {
-      html.push(`</${listType}>`);
-    }
-    inList = false;
-    listType = null;
-  };
-
-  for (const line of lines) {
-    if (line.startsWith("## ")) {
-      closeList();
-      html.push(`<h2>${line.slice(3)}</h2>`);
-      continue;
-    }
-
-    const orderedMatch = line.match(/^\d+\.\s+(.*)$/);
-    if (orderedMatch) {
-      if (!inList || listType !== "ol") {
-        closeList();
-        html.push("<ol>");
-        inList = true;
-        listType = "ol";
-      }
-      html.push(`<li>${inlineCode(orderedMatch[1])}</li>`);
-      continue;
-    }
-
-    const bulletMatch = line.match(/^-\s+(.*)$/);
-    if (bulletMatch) {
-      if (!inList || listType !== "ul") {
-        closeList();
-        html.push("<ul>");
-        inList = true;
-        listType = "ul";
-      }
-      html.push(`<li>${inlineCode(bulletMatch[1])}</li>`);
-      continue;
-    }
-
-    closeList();
-
-    if (line.trim().length === 0) {
-      html.push("<p></p>");
-      continue;
-    }
-
-    html.push(`<p>${inlineCode(line)}</p>`);
-  }
-
-  closeList();
-
-  return html.join("\n");
-}
-
-function inlineCode(text: string): string {
-  return text.replace(/`([^`]+)`/g, "<code>$1</code>");
-}
-
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }

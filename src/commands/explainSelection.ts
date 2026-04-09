@@ -1,4 +1,4 @@
-import * as vscode from "vscode";
+﻿import * as vscode from "vscode";
 import { createHash } from "crypto";
 import { ResultPanel } from "../views/resultPanel";
 import { getConfig } from "../services/configService";

@@ -1,4 +1,4 @@
-export type ExplainMode = "detailed" | "concise";
+export type ExplainMode = "detail" | "simple";
 
 export interface EditorSelectionContext {
   language: string;

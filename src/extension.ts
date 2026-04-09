@@ -3,7 +3,7 @@ import { registerExplainSelectionCommand } from "./commands/explainSelection";
 import { ResultPanel } from "./views/resultPanel";
 
 export function activate(context: vscode.ExtensionContext): void {
-  const panel = new ResultPanel(context.extensionUri);
+  const panel = new ResultPanel();
   registerExplainSelectionCommand(context, panel);
 }
 

@@ -1,23 +1,19 @@
-# Local Code Explainer / 本地代码解释器
+﻿# Local Code Explainer / 鏈湴浠ｇ爜瑙ｉ噴鍣?### 鏈彃浠朵綔涓轰釜浜虹敤閫旓紝闇€杩炴帴鏈湴llm serve
+## Language Index / 璇█绱㈠紩
 
-## Language Index / 语言索引
-
-- [中文说明](#中文说明)
+- [涓枃璇存槑](#涓枃璇存槑)
 - [English](#english)
 
 ---
 
-## 中文说明
+## 涓枃璇存槑
 
-一个 VS Code 扩展，通过调用本地 LLM HTTP 服务（兼容 OpenAI 风格接口）来解释所选代码。
-
-### 功能特性
-
-- 通过一条命令解释所选代码。
-- 默认快捷键：
+涓€涓?VS Code 鎵╁睍锛岄€氳繃璋冪敤鏈湴 LLM HTTP 鏈嶅姟鏉ヨВ閲婃墍閫変唬鐮併€?鐢ㄤ簬甯姪浣跨敤鑰呭洖蹇嗗彶鍓嶅睅灞变唬鐮?
+### 鍔熻兘鐗规€?
+- 閫氳繃涓€鏉″懡浠よВ閲婃墍閫変唬鐮併€?- 榛樿蹇嵎閿細
   - Windows/Linux: `Ctrl+Alt+E`
   - macOS: `Cmd+Alt+E`
-- 收集请求上下文信息：
+- 鏀堕泦璇锋眰涓婁笅鏂囦俊鎭細
   - `language`
   - `fileName`
   - `selectedCode`
@@ -26,63 +22,46 @@
   - `selectionStartLine`
   - `selectionEndLine`
   - `mode`
-- 在独立的 `WebviewPanel` 中显示长篇解释结果。
-- 基础错误处理：
-  - 未选择代码
-  - 选择内容过大
-  - HTTP 请求失败
-  - 请求超时
-- 支持可选的会话内缓存，用于重复请求加速。
+- 鍦ㄧ嫭绔嬬殑 `WebviewPanel` 涓樉绀洪暱绡囪В閲婄粨鏋溿€?- 鍩虹閿欒澶勭悊锛?  - 鏈€夋嫨浠ｇ爜
+  - 閫夋嫨鍐呭杩囧ぇ
+  - HTTP 璇锋眰澶辫触
+  - 璇锋眰瓒呮椂
+- 鏀寔鍙€夌殑浼氳瘽鍐呯紦瀛橈紝鐢ㄤ簬閲嶅璇锋眰鍔犻€熴€?
+### 宸ヤ綔鍘熺悊
 
-### 工作原理
+1. 鍦ㄧ紪杈戝櫒涓€変腑浠ｇ爜銆?2. 杩愯鍛戒护锛歚Local Code Explainer: Explain Selected Code`锛屾垨鐩存帴浣跨敤蹇嵎閿€?3. 鎵╁睍鍚戞湰鍦版ā鍨嬫湇鍔″彂閫佽姹傘€?4. 妯″瀷杩斿洖 Markdown 鏍煎紡鐨勮В閲婂唴瀹广€?5. 缁撴灉浼氭樉绀哄湪渚ц竟闈㈡澘涓€?
+### 鐜瑕佹眰
 
-1. 在编辑器中选中代码。
-2. 运行命令：`Local Code Explainer: Explain Selected Code`，或直接使用快捷键。
-3. 扩展向本地模型服务发送请求。
-4. 模型返回 Markdown 格式的解释内容。
-5. 结果会显示在侧边面板中。
+- 涓€涓敮鎸?OpenAI 鍏煎鑱婂ぉ琛ュ叏鎺ュ彛鐨勬湰鍦?HTTP LLM 鏈嶅姟銆備緥濡俙qwen2.5-coder-7b-instruct-q5_k_m.gguf`
 
-### 环境要求
-
-- 一个支持 OpenAI 兼容聊天补全接口的本地 HTTP LLM 服务。
-- 示例模型名称：`qwen2.5-coder-7b-instruct-q5_k_m.gguf`
-
-### 配置项
-
-打开 VS Code 设置，搜索 `Local Code Explainer`。
-
-可用配置项：
+### 閰嶇疆椤?
+鎵撳紑 VS Code 璁剧疆锛屾悳绱?`Local Code Explainer`銆?
+鍙敤閰嶇疆椤癸細
 
 - `localCodeExplainer.baseUrl`
-  - 默认值：`http://127.0.0.1:8000`
+  - 榛樿鍊硷細`http://127.0.0.1:8000`
 - `localCodeExplainer.apiPath`
-  - 默认值：`/v1/chat/completions`
+  - 榛樿鍊硷細`/v1/chat/completions`
 - `localCodeExplainer.model`
-  - 默认值：`qwen2.5-coder-7b-instruct-q5_k_m.gguf`
+  - 榛樿鍊硷細`qwen2.5-coder-7b-instruct-q5_k_m.gguf`
 - `localCodeExplainer.timeoutMs`
-  - 默认值：`60000`
+  - 榛樿鍊硷細`60000`
 - `localCodeExplainer.contextBeforeLines`
-  - 默认值：`20`
+  - 榛樿鍊硷細`20`
 - `localCodeExplainer.contextAfterLines`
-  - 默认值：`20`
+  - 榛樿鍊硷細`20`
 - `localCodeExplainer.defaultMode`
-  - 默认值：`detailed`
-  - 可选值：`concise`
+  - 榛樿鍊硷細`detail`
+  - 鍙€夊€硷細`simple`
 - `localCodeExplainer.maxSelectionChars`
-  - 默认值：`12000`
+  - 榛樿鍊硷細`12000`
 - `localCodeExplainer.enableCache`
-  - 默认值：`true`
+  - 榛樿鍊硷細`true`
 
-### 修改快捷键
-
-快捷键可通过 VS Code 的标准方式进行自定义：
-
-1. 打开 Keyboard Shortcuts（键盘快捷方式）。
-2. 搜索 `Local Code Explainer: Explain Selected Code`。
-3. 设置你想要的快捷键。
-
-或者直接编辑 `keybindings.json`：
-
+### 淇敼蹇嵎閿?
+蹇嵎閿彲閫氳繃 VS Code 鐨勬爣鍑嗘柟寮忚繘琛岃嚜瀹氫箟锛?
+1. 鎵撳紑 Keyboard Shortcuts锛堥敭鐩樺揩鎹锋柟寮忥級銆?2. 鎼滅储 `Local Code Explainer: Explain Selected Code`銆?3. 璁剧疆浣犳兂瑕佺殑蹇嵎閿€?
+鎴栬€呯洿鎺ョ紪杈?`keybindings.json`锛?
 ```json
 [
   {
@@ -126,7 +105,7 @@ A VS Code extension that explains selected code by calling a local LLM HTTP serv
 
 1. Select code in editor.
 2. Run command: `Local Code Explainer: Explain Selected Code` or use shortcut.
-3. Extension sends request to your local model service.
+3. Extension sends request to your local model service using `localCodeExplainer.defaultMode`.
 4. Model returns Markdown explanation.
 5. Result is shown in a side panel.
 
@@ -154,8 +133,8 @@ Available options:
 - `localCodeExplainer.contextAfterLines`
   - Default: `20`
 - `localCodeExplainer.defaultMode`
-  - Default: `detailed`
-  - Optional: `concise`
+  - Default: `simple`
+  - Optional: `detail`
 - `localCodeExplainer.maxSelectionChars`
   - Default: `12000`
 - `localCodeExplainer.enableCache`
